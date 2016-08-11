@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{188A19DC-AD78-4293-BB89-B8218E0709A2}</ProjectGuid>
+    <ProjectGuid>{D6A20A72-58D0-4FBB-AA23-168320660222}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>kOSEVA</RootNamespace>
-    <AssemblyName>kOS-EVA</AssemblyName>
+    <RootNamespace>KISAutoEquip</RootNamespace>
+    <AssemblyName>KISAutoEquip</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +40,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\Steam\SteamApps\common\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="KIS">
+      <HintPath>..\..\..\Steam\SteamApps\common\Kerbal Space Program\GameData\KIS\Plugins\KIS.dll</HintPath>
+    </Reference>
     <Reference Include="kOS">
       <HintPath>..\..\..\Steam\SteamApps\common\Kerbal Space Program\GameData\kOS\Plugins\kOS.dll</HintPath>
     </Reference>
@@ -62,10 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Addon.cs" />
-    <Compile Include="EvaController.cs" />
-    <Compile Include="KerbalAnimationClip.cs" />
-    <Compile Include="KerbalEVAUtility.cs" />
+    <Compile Include="Autoequip.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
