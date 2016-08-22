@@ -35,11 +35,11 @@ Executes the event on the part which starts with the string <eventname>. It only
 
 >addons:eva:doevent(part,"Store Experiments").
  
-**:LADDER_GRAB **
+**:LADDER_GRAB**
 
 Grab a nearby ladder
 
-**:LADDER_RELEASE **
+**:LADDER_RELEASE**
 
 Release a grabbed ladder
 
