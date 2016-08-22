@@ -88,7 +88,7 @@ The Kerbal will move in that direction.
 * Stop.
 
 
-**:BOARDPART(\<Part\>)** 
+**:BOARDPART(<Part>)** 
 
 Enters the Part
 
@@ -108,7 +108,7 @@ Plants a Flag. This requires in the moment a confirmation with the mouse.
 List of all things a Kerbal can do.
 
 
-**:RUNACTION("Actionname")** 
+**:RUNACTION(<Actionname>)** 
 
 Runs a Kerbal action by its name (ex.: addons:eva:runaction("Jump Start") )
 
@@ -118,24 +118,24 @@ Runs a Kerbal action by its name (ex.: addons:eva:runaction("Jump Start") )
 List of all animation names.
 
 
-**:LOADANIMATION("path")**
+**:LOADANIMATION(\<path\>)**
 
 Loads a custom animation by its relative pathname into the list of animations. The custom animations are created by [KerbalAnimationSuite](http://forum.kerbalspaceprogram.com/index.php?/topic/117663-113-kerbal-animation-suite/ )
 example:
 
-> addons:eva:LOADANIMATION("\kOS-Pad\Anims\Wave.anim").
+\> addons:eva:LOADANIMATION("\kOS-Pad\Anims\Wave.anim").
 
 
-**:PLAYANIMATION(<name>)** 
+**:PLAYANIMATION(\<name\>)** 
 
-Runs a animation by its <name> shown by *:animationlist*.
+Runs a animation by its \<name\> shown by *:animationlist*.
 
-> addons:eva:PLAYANIMATION("Wave").
+\> addons:eva:PLAYANIMATION("Wave").
 
 
-**:STOPANIMATION(<name>)** 
+**:STOPANIMATION(\<name\>)** 
 
-Stops the Animation named <name>.
+Stops the Animation named \<name\>.
 
  
 **:STOPALLANIMATIONS"** 
