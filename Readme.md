@@ -120,8 +120,9 @@ List of all animation names.
 
 **:LOADANIMATION(\<path\>)**
 
-Loads a custom animation by its relative pathname into the list of animations. The custom animations are created by [KerbalAnimationSuite](http://forum.kerbalspaceprogram.com/index.php?/topic/117663-113-kerbal-animation-suite/ )
-example:
+Loads a custom animation by its relative pathname into the list of animations. The custom animations are created by [KerbalAnimationSuite](http://forum.kerbalspaceprogram.com/index.php?/topic/117663-113-kerbal-animation-suite/ ) 
+
+example: 
 
 > addons:eva:LOADANIMATION("\kOS-Pad\Anims\Wave.anim").
 
