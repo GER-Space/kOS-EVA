@@ -36,32 +36,25 @@ Executes the event on the part which starts with the string <eventname>. It only
 >addons:eva:doevent(part,"Store Experiments").
  
 **:LADDER_GRAB**
-
 Grab a nearby ladder
 
 **:LADDER_RELEASE**
-
 Release a grabbed ladder
 
 
 **:TURN_LEFT(<degrees>)** 
-
 Make the kerbal turn left by <deg>.
 
 
 **:TURN_RIGHT(<degrees>)**
-
 Make the kerbal turn right by <deg>.
 
 
 **:TURN_TO(<position_vector>)** 
-
 Make the kerbal turn to a <vector>.
 
 
-
 **:MOVE(<what>)**
-
 The Kerbal will move in that direction.
 
 #### on land ####
@@ -84,12 +77,10 @@ The Kerbal will move in that direction.
 
 
 **:BOARDPART(<Part>)** 
-
 Enters the Part
 
 
 **:BOARD**
-
 Board a nearby vessel or part. The normal KSP rules of boarding apply.
 
 **:PLANTFLAG** 
