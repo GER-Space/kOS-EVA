@@ -28,3 +28,5 @@ https://github.com/AlexanderDzhoganov/ksp-advanced-flybywire
 KerbalEVAutility and KerbalAnimationClib are from https://github.com/HappyFaceIndustries/KerbalAnimationSuite
 and is licened under https://gnu.org/licenses/gpl-3.0.txt
 
+Art Assets, including .mu, .mbm, and .dds files are copyright 2014-2016 by Michael Billard (Angel-125). 
+They are included with his permission.

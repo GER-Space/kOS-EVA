@@ -11,7 +11,6 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using EVAMove;
 
-
 namespace kOS.AddOns.kOSEVA
 {
     [kOSAddon("EVA")]
@@ -26,7 +25,7 @@ namespace kOS.AddOns.kOSEVA
         private void InitializeSuffixes()
         {
             
-        //    AddSuffix("DOEVENT", new TwoArgsSuffix<Suffixed.Part.PartValue, StringValue>(DoEvent, ""));
+            AddSuffix("DOEVENT", new TwoArgsSuffix<Suffixed.Part.PartValue, StringValue>(DoEvent, ""));
             AddSuffix("LADDER_RELEASE", new NoArgsVoidSuffix(LadderRelease, "Release a grabbed ladder"));
             AddSuffix("LADDER_GRAB", new NoArgsVoidSuffix(LadderGrab, "Grab a nearby ladder"));
             AddSuffix("TURN_LEFT", new OneArgsSuffix<ScalarValue>(TurnLeft, "make the kerbal turn by <deg>"));
@@ -77,12 +76,41 @@ namespace kOS.AddOns.kOSEVA
         private void DoEvent(Suffixed.Part.PartValue part , StringValue eventname)
         {
             var mypart = part.Part;
-            if   (Vector3d.Magnitude(mypart.transform.position - kerbaleva.transform.position) < 3)
+            PartModule partmodule = null;
+            if   (Vector3d.Magnitude(mypart.transform.position - kerbaleva.transform.position) < 1.5)
             {
-           //     mypart.g
+                PartModule[] allpartmodules = mypart.GetComponents<PartModule>();
+                foreach (var pm in allpartmodules)
+                {
+                    if ( pm.Events.Where(x => x.GUIName.ToLower().StartsWith(eventname.ToLower()) ).FirstOrDefault() == null )
+                    {
+                        continue;
+                    }
+                    Debug.Log("kOS-EVA: [DOEVENT] Partmodule found:" + pm.moduleName);
+                    partmodule = pm;
 
+                }
+
+                if (partmodule == null)
+                {
+                    Debug.LogWarning("kOS-EVA: [DOEVENT] Partmodule not found ");
+                    return;
+                }
+                BaseEvent my_event = partmodule.Events.Where(x => x.GUIName.ToLower().StartsWith(eventname.ToLower()) ).FirstOrDefault();
+                if (my_event == null)
+                {
+                    Debug.LogWarning("kOS-EVA: [DOEVENT] Event not found ");
+                    return;
+                }
+                else
+                {
+                    Debug.Log("kOS-EVA: [DOEVENT] Invoking:" + my_event.GUIName);
+                    my_event.Invoke();
+                }
+            } else
+            {
+                Debug.LogWarning("kOS-EVA: [DOEVENT] Part Out of Range: " + Math.Round(Vector3d.Magnitude(mypart.transform.position - kerbaleva.transform.position),2) + " > 1.5");
             }
-
         }
 
 
