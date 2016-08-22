@@ -31,9 +31,9 @@ Kicks the unlucky kerbal out of his nice vessel. (ex: addons:eva:goeva(SHIP:CREW
 
 Executes the event on the part which starts with the string \<eventname\>. It only works when the kerbal is closer than 1.5m to the part. 
 *example:* 
-\>set part to vessel("pad test"):parts[0].  
+>set part to vessel("pad test"):parts[0].  
 
-\>addons:eva:doevent(part,"Store Experiments").
+>addons:eva:doevent(part,"Store Experiments").
  
 **:LADDER_GRAB**
 
@@ -118,24 +118,24 @@ Runs a Kerbal action by its name (ex.: addons:eva:runaction("Jump Start") )
 List of all animation names.
 
 
-**:LOADANIMATION(\\<path\\>)**
+**:LOADANIMATION(\<path\>)**
 
 Loads a custom animation by its relative pathname into the list of animations. The custom animations are created by [KerbalAnimationSuite](http://forum.kerbalspaceprogram.com/index.php?/topic/117663-113-kerbal-animation-suite/ )
 example:
 
-\\> addons:eva:LOADANIMATION("\kOS-Pad\Anims\Wave.anim").
+> addons:eva:LOADANIMATION("\kOS-Pad\Anims\Wave.anim").
 
 
 **:PLAYANIMATION(\\<name\\>)** 
 
-Runs a animation by its \\<name\\> shown by *:animationlist*.
+Runs a animation by its \<name\> shown by *:animationlist*.
 
-\\> addons:eva:PLAYANIMATION("Wave").
+> addons:eva:PLAYANIMATION("Wave").
 
 
-**:STOPANIMATION(\\<name\\>)** 
+**:STOPANIMATION(\<name\>)** 
 
-Stops the Animation named \\<name\\>.
+Stops the Animation named \<name\>.
 
  
 **:STOPALLANIMATIONS"** 
