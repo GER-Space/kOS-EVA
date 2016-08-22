@@ -22,18 +22,18 @@ Basepath is **addons:eva**
  
 ### From a Ship:
 
-**:GOEVA(<crewmember>)**  
+**:GOEVA(\<crewmember\>)**  
 Kicks the unlucky kerbal out of his nice vessel. (ex: addons:eva:goeva(SHIP:CREW[0]).
 
 ### On EVA
 
-**:DOEVENT(<part>,<eventname>)**  
+**:DOEVENT(\<part\>,\<eventname\>)**  
 
-Executes the event on the part which starts with the string <eventname>. It only works when the kerbal is closer than 1.5m to the part. 
+Executes the event on the part which starts with the string \<eventname\>. It only works when the kerbal is closer than 1.5m to the part. 
 *example:* 
->set part to vessel("pad test"):parts[0].  
+\>set part to vessel("pad test"):parts[0].  
 
->addons:eva:doevent(part,"Store Experiments").
+\>addons:eva:doevent(part,"Store Experiments").
  
 **:LADDER_GRAB**
 
@@ -47,25 +47,25 @@ Release a grabbed ladder
 
 
 
-**:TURN_LEFT(<degrees>)** 
+**:TURN_LEFT(\<degrees\>)** 
 
-Make the kerbal turn left by <deg>.
+Make the kerbal turn left by \<deg\>.
 
 
 
-**:TURN_RIGHT(<degrees>)**
+**:TURN_RIGHT(\<degrees\>)**
 
-Make the kerbal turn right by <deg>.
+Make the kerbal turn right by \<deg\>.
  
  
  
-**:TURN_TO(<position_vector>)** 
+**:TURN_TO(\<position_vector\>)** 
 
-Make the kerbal turn to a <vector>.
+Make the kerbal turn to a \<vector\>.
 
 
 
-**:MOVE(<what>)**
+**:MOVE(\<what\>)**
 
 The Kerbal will move in that direction.
 
@@ -88,7 +88,7 @@ The Kerbal will move in that direction.
 * Stop.
 
 
-**:BOARDPART(<Part>)** 
+**:BOARDPART(\<Part\>)** 
 
 Enters the Part
 
@@ -108,7 +108,7 @@ Plants a Flag. This requires in the moment a confirmation with the mouse.
 List of all things a Kerbal can do.
 
 
-**:RUNACTION(<Actionname>)** 
+**:RUNACTION(\<Actionname\>)** 
 
 Runs a Kerbal action by its name (ex.: addons:eva:runaction("Jump Start") )
 
@@ -118,24 +118,24 @@ Runs a Kerbal action by its name (ex.: addons:eva:runaction("Jump Start") )
 List of all animation names.
 
 
-**:LOADANIMATION(\<path\>)**
+**:LOADANIMATION(\\<path\\>)**
 
 Loads a custom animation by its relative pathname into the list of animations. The custom animations are created by [KerbalAnimationSuite](http://forum.kerbalspaceprogram.com/index.php?/topic/117663-113-kerbal-animation-suite/ )
 example:
 
-\> addons:eva:LOADANIMATION("\kOS-Pad\Anims\Wave.anim").
+\\> addons:eva:LOADANIMATION("\kOS-Pad\Anims\Wave.anim").
 
 
-**:PLAYANIMATION(\<name\>)** 
+**:PLAYANIMATION(\\<name\\>)** 
 
-Runs a animation by its \<name\> shown by *:animationlist*.
+Runs a animation by its \\<name\\> shown by *:animationlist*.
 
-\> addons:eva:PLAYANIMATION("Wave").
+\\> addons:eva:PLAYANIMATION("Wave").
 
 
-**:STOPANIMATION(\<name\>)** 
+**:STOPANIMATION(\\<name\\>)** 
 
-Stops the Animation named \<name\>.
+Stops the Animation named \\<name\\>.
 
  
 **:STOPALLANIMATIONS"** 
