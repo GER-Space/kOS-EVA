@@ -11,6 +11,9 @@ using kOS.Safe.Encapsulation;
 using kOS.Safe.Encapsulation.Suffixes;
 using EVAMove;
 
+using System.Collections.Generic;
+using System.Reflection;
+
 namespace kOS.AddOns.kOSEVA
 {
     [kOSAddon("EVA")]
@@ -25,7 +28,7 @@ namespace kOS.AddOns.kOSEVA
         private void InitializeSuffixes()
         {
             
-            AddSuffix("DOEVENT", new TwoArgsSuffix<Suffixed.Part.PartValue, StringValue>(DoEvent, ""));
+            AddSuffix("DOEVENT", new TwoArgsSuffix<Suffixed.Part.PartValue, StringValue>(DoEvent, "Performs a Event on a others vessel part."));
             AddSuffix("LADDER_RELEASE", new NoArgsVoidSuffix(LadderRelease, "Release a grabbed ladder"));
             AddSuffix("LADDER_GRAB", new NoArgsVoidSuffix(LadderGrab, "Grab a nearby ladder"));
             AddSuffix("TURN_LEFT", new OneArgsSuffix<ScalarValue>(TurnLeft, "make the kerbal turn by <deg>"));
@@ -57,7 +60,10 @@ namespace kOS.AddOns.kOSEVA
              //   Debug.Log("EVA Initialisierung abgeschlossen0");
                 this.kerbaleva = shared.Vessel.GetComponentCached<KerbalEVA>(ref kerbaleva);
             }
-
+#if DEBUG 
+            AddSuffix("LS", new NoArgsSuffix<ListValue>(listfields, ""));
+            AddSuffix("LSF", new NoArgsSuffix<ListValue>(listfunctions, ""));
+#endif
 
         }
         internal Module.kOSProcessor _myprocessor = null;
@@ -72,6 +78,51 @@ namespace kOS.AddOns.kOSEVA
 
 
         #region Suffix functions
+#if DEBUG 
+        private ListValue listfields ()
+        {
+            ListValue vectors = new ListValue();
+            List<FieldInfo> fields = new List<FieldInfo>(typeof(KerbalEVA).GetFields(
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance));
+            var vectorFields = new List<FieldInfo>(fields.Where<FieldInfo>(f => f.FieldType.Equals(typeof(Vector3))));
+            foreach (var vector in vectorFields)
+            {
+                vectors.Add(new StringValue(vector.Name + "    \t   " + vector.FieldType.ToString() ));
+
+            }
+            foreach (var vector in fields)
+            {
+                vectors.Add(new StringValue(vector.Name + "    \t   " + vector.FieldType.ToString()));
+
+            }
+
+            return vectors;
+        }
+
+        private ListValue listfunctions()
+        {
+            ListValue vectors = new ListValue();
+            List<MethodInfo> methods = new List<MethodInfo>(typeof(KerbalEVA).GetMethods(
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance));
+            //var vectorFields = new List<FieldInfo>(fields.Where<FieldInfo>(f => f.FieldType.Equals(typeof(Vector3))));
+            foreach (var method in methods)
+            {
+                var parameters = method.GetParameters().ToArray();
+                string paraname = "( ";
+                foreach ( var para in parameters )
+                {
+                    paraname = paraname + para.ParameterType.ToString() + " ";
+                    paraname = paraname + para.Name.ToString() + " , ";
+                }
+                paraname = paraname + " )";
+                vectors.Add(new StringValue(method.Name + "    \t    " + paraname));
+
+            }
+            return vectors;
+        }
+
+#endif
+
 
         private void DoEvent(Suffixed.Part.PartValue part , StringValue eventname)
         {
@@ -141,8 +192,7 @@ namespace kOS.AddOns.kOSEVA
         }
         private void LadderRelease()
         {
-            try
-            {
+            try { 
                 KerbalEVAUtility.RunEvent(kerbaleva, "Ladder Let Go");
             }
             catch { }
@@ -201,7 +251,11 @@ namespace kOS.AddOns.kOSEVA
             }
             if (kerbaleva.part.GroundContact)
             {
-                kerbaleva.PlantFlag();
+                try
+                {
+                    KerbalEVAUtility.RunEvent(kerbaleva, "Flag Plant Started");
+                }
+                catch { }
             }
         }
 
@@ -256,6 +310,12 @@ namespace kOS.AddOns.kOSEVA
                 this.kerbaleva = shared.Vessel.GetComponentCached<KerbalEVA>(ref kerbaleva);
                 evacontrol = evacontrol = shared.Vessel.GetComponentCached<EvaController>(ref evacontrol);
                 evacontrol.eva = kerbaleva;
+
+                evacontrol.eva_tgtRpos = typeof(KerbalEVA).GetField("tgtRpos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                evacontrol.eva_packTgtRPos = typeof(KerbalEVA).GetField("packTgtRPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                evacontrol.eva_tgtFwd = typeof(KerbalEVA).GetField("tgtFwd", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                evacontrol.eva_tgtUp = typeof(KerbalEVA).GetField("tgtUp", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
                 Debug.LogWarning("kOSEVA: Stop init EvaController");
             }
 

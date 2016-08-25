@@ -43,6 +43,13 @@ namespace EVAMove
         public float rotationdeg;
         internal string currentanimation = null;
         internal string tgtanimation = null;
+        public FieldInfo eva_tgtFwd = null;
+        public FieldInfo eva_tgtUp = null;
+        public FieldInfo eva_tgtRpos = null;
+        public FieldInfo eva_packTgtRPos = null;
+        internal bool once = true;
+
+
 
         public void FixedUpdate()
         {
@@ -76,6 +83,11 @@ namespace EVAMove
                 return;
             }
 
+            if (eva.JetpackDeployed)
+            {
+                DoMoveInSpace();
+                return;
+            }
 
         }
 
@@ -169,6 +181,7 @@ namespace EVAMove
 
         internal void DoMoveOnLand()
         {
+            if (eva.CharacterFrameMode && once) { Debug.LogWarning("Framemode active"); once = false; }
             float dtime = Time.deltaTime;
             switch (order)
             {
@@ -214,10 +227,63 @@ namespace EVAMove
                 default:
                     break;
             }
-
         }
 
-
+        internal void DoMoveInSpace()
+        {
+            float dtime = Time.deltaTime;
+            if (eva.CharacterFrameMode && once) { Debug.LogWarning("Framemode active"); once = false; }
+            switch (order)
+            {
+                case Command.Forward:
+                    //this.eva_packTgtRPos.SetValue(eva, eva.transform.forward);
+                    //this.eva_Vtgt.SetValue(eva, eva.transform.forward );
+                    eva.part.Rigidbody.AddForce(eva.transform.forward * dtime * 2f, ForceMode.Force);
+                    break;
+                case Command.Backward:
+                    //this.eva_tgtRpos.SetValue(eva, -eva.transform.forward);
+                    //this.eva_packTgtRPos.SetValue(eva, -eva.transform.forward);
+                    //this.eva_Vtgt.SetValue(eva, -eva.transform.forward);
+                    eva.part.Rigidbody.AddForce(-eva.transform.forward * dtime * 2f, ForceMode.Force);
+                    //FlightInputHandler.state.mainThrottle = 1f;
+                    break;
+                case Command.Left:
+                    // this.eva_packTgtRPos.SetValue(eva, -eva.transform.right);
+                    eva.part.Rigidbody.AddForce(-eva.transform.right * dtime * 2f, ForceMode.Force);
+                    break;
+                case Command.Right:
+                    this.eva_packTgtRPos.SetValue(eva, eva.transform.right);
+                    eva.part.Rigidbody.AddForce(eva.transform.right * dtime * 2f, ForceMode.Force);
+                    break;
+                case Command.Up:
+                    this.eva_packTgtRPos.SetValue(eva, eva.transform.up);
+                    eva.part.Rigidbody.AddForce(eva.transform.up * dtime * 2f, ForceMode.Force);
+                    break;
+                case Command.Down:
+                    this.eva_packTgtRPos.SetValue(eva, -eva.transform.up);
+                    eva.part.Rigidbody.AddForce(-eva.transform.up * dtime * 2f, ForceMode.Force);
+                    break;
+                case Command.LookAt:
+                    if (Vector3d.Angle(eva.vessel.transform.forward,  lookdirection) < 3)
+                    {
+                        order = Command.Stop;
+                        break;
+                    }
+                   // var step = eva.turnRate * dtime;
+                    var step = eva.rotPower * dtime;
+                   // Quaternion from = eva.vessel.transform.rotation;
+                   // Quaternion to = Quaternion.LookRotation((Vector3)lookdirection.normalized, eva.vessel.transform.up);
+                   // Quaternion result = Quaternion.RotateTowards(from, to, step);
+                  //  this.eva_tgtFwd.SetValue(eva, result * (Vector3)this.eva_tgtFwd.GetValue(eva));
+                  //  this.eva_tgtUp.SetValue(eva, result * (Vector3)this.eva_tgtUp.GetValue(eva));
+                       this.eva_tgtFwd.SetValue(eva, (Vector3)lookdirection.normalized);
+                    break;
+                case Command.Stop:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         private void PlayAnimation(string name)
         {
