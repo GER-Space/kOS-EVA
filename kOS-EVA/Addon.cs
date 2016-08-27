@@ -27,7 +27,8 @@ namespace kOS.AddOns.kOSEVA
 
         private void InitializeSuffixes()
         {
-            
+
+            AddSuffix("TOGGLE_RCS", new OneArgsSuffix<BooleanValue>(ToggleRCS, "Switch the RCS of the Pack <on|off>"));
             AddSuffix("DOEVENT", new TwoArgsSuffix<Suffixed.Part.PartValue, StringValue>(DoEvent, "Performs a Event on a others vessel part."));
             AddSuffix("LADDER_RELEASE", new NoArgsVoidSuffix(LadderRelease, "Release a grabbed ladder"));
             AddSuffix("LADDER_GRAB", new NoArgsVoidSuffix(LadderGrab, "Grab a nearby ladder"));
@@ -69,6 +70,7 @@ namespace kOS.AddOns.kOSEVA
         internal Module.kOSProcessor _myprocessor = null;
         public KerbalEVA kerbaleva = null;
         internal EvaController evacontrol = null;
+        internal bool rcs_state = false;
 
         public override BooleanValue Available()
         {
@@ -122,7 +124,18 @@ namespace kOS.AddOns.kOSEVA
         }
 
 #endif
-
+        private void ToggleRCS(BooleanValue state)
+        {
+            if (state.Value != rcs_state)
+            {
+                try
+                {
+                    KerbalEVAUtility.RunEvent(kerbaleva, "Pack Toggle");
+                    rcs_state = state;
+                }
+                catch { }
+            }
+        }
 
         private void DoEvent(Suffixed.Part.PartValue part , StringValue eventname)
         {
@@ -315,6 +328,7 @@ namespace kOS.AddOns.kOSEVA
                 evacontrol.eva_packTgtRPos = typeof(KerbalEVA).GetField("packTgtRPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 evacontrol.eva_tgtFwd = typeof(KerbalEVA).GetField("tgtFwd", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 evacontrol.eva_tgtUp = typeof(KerbalEVA).GetField("tgtUp", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                evacontrol.eva_packLinear = typeof(KerbalEVA).GetField("packLinear", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
                 Debug.LogWarning("kOSEVA: Stop init EvaController");
             }

@@ -47,6 +47,7 @@ namespace EVAMove
         public FieldInfo eva_tgtUp = null;
         public FieldInfo eva_tgtRpos = null;
         public FieldInfo eva_packTgtRPos = null;
+        public FieldInfo eva_packLinear = null;
         internal bool once = true;
 
 
@@ -232,20 +233,21 @@ namespace EVAMove
         internal void DoMoveInSpace()
         {
             float dtime = Time.deltaTime;
-            if (eva.CharacterFrameMode && once) { Debug.LogWarning("Framemode active"); once = false; }
+            if  (once) { Debug.LogWarning("linPower: " + eva.linPower.ToString() + "   rotation Power:  " + eva.rotPower.ToString()  ); once = false; }
             switch (order)
             {
                 case Command.Forward:
                     //this.eva_packTgtRPos.SetValue(eva, eva.transform.forward);
                     //this.eva_Vtgt.SetValue(eva, eva.transform.forward );
                     eva.part.Rigidbody.AddForce(eva.transform.forward * dtime * 2f, ForceMode.Force);
+                    //this.eva_packLinear.SetValue(eva, eva.transform.forward);
                     break;
                 case Command.Backward:
                     //this.eva_tgtRpos.SetValue(eva, -eva.transform.forward);
                     //this.eva_packTgtRPos.SetValue(eva, -eva.transform.forward);
                     //this.eva_Vtgt.SetValue(eva, -eva.transform.forward);
                     eva.part.Rigidbody.AddForce(-eva.transform.forward * dtime * 2f, ForceMode.Force);
-                    //FlightInputHandler.state.mainThrottle = 1f;
+                    //FlightInputHandler.state.mainThrottle = 1.0f;
                     break;
                 case Command.Left:
                     // this.eva_packTgtRPos.SetValue(eva, -eva.transform.right);

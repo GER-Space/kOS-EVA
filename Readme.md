@@ -45,7 +45,9 @@ Grab a nearby ladder
 
 Release a grabbed ladder
 
+**:TOGGLE_RCS(\<bool\>)**
 
+Switches the RCS of a floating Kerbal on or off. 
 
 **:TURN_LEFT(\<degrees\>)** 
 
@@ -148,7 +150,7 @@ Stops all Animations and returns the kerbal to his idle state.
 
 ## future Plans
 
-* movement in space
+* better/real RCS movement in space. 
 * automatic planting of a flag
 * KIS support
 * reenable actionsgroups
@@ -160,7 +162,7 @@ Stops all Animations and returns the kerbal to his idle state.
 ## Known Bugs and limitations
 
 * automatic boot does not work with RemoteTech enabled. (no easy workaround in the queue)
-* No control in Space or when flying
+* limited control in Space with RCS thrusters.
 * the animations are not smoothed out, when there is a change in animations.
 * the default actionsgroups keys are not implemented and worse: they are overridden by the default KIS configuration.
 * planting a flag requires a confirmation. 
