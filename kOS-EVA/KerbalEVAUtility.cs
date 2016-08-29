@@ -21,7 +21,7 @@ public static class KerbalEVAUtility
 	}
 	private static void AddModule(string partName, string moduleName)
 	{
-		Debug.Log ("Adding" + moduleName + " to part " + partName);
+		Debug.Log ("Adding " + moduleName + " to part " + partName);
 
 		foreach (var aPart in PartLoader.LoadedPartsList)
 		{
