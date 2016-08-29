@@ -27,15 +27,7 @@ namespace EVAMove
 
         public static EvaController instance = null;
 
-
-        public static EvaController Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
-        public EvaController() { Debug.LogWarning("EvaController Created"); instance = this; }
+ //       public EvaController() { if (FlightGlobals.ActiveVessel.isEVA) {  Debug.LogWarning("EvaController Created"); instance = this; } }
 
         public Command order = Command.Stop;
         public KerbalEVA eva = null;
@@ -49,12 +41,59 @@ namespace EVAMove
         public FieldInfo eva_packTgtRPos = null;
         public FieldInfo eva_packLinear = null;
         internal bool once = true;
+        internal Vessel parentVessel = null;
+        internal float lastkeypressed = 0.0f;
 
+
+        /// <summary>
+        /// OnAwake is called once when instatiating a new VesselModule.  This is the first method called
+        /// by KSP after the VesselModule has been attached to the parent Vessel.  We use it to store
+        /// the parent Vessel and track the kOSVesselModule instances.
+        /// </summary>
+        public override void OnAwake()
+        {
+            Debug.LogWarning("EvaController Awake()!");
+            parentVessel = GetComponent<Vessel>();
+            if (parentVessel != null)
+            {
+                if (parentVessel.isEVA)
+                {
+                    instance = this;
+                    Debug.LogWarning("EvaController Awake() finished on " + parentVessel.vesselName);
+                }
+                else
+                {
+                    Debug.LogWarning("EvaController destroyed on " + parentVessel.vesselName + " not EVA" );
+                    Destroy(this);
+                }
+            } else
+            {
+                Debug.LogWarning("EvaController destroyed: No Vessel");
+                Destroy(this);
+            }
+        }
+
+        /// <summary>
+        /// Start is called after OnEnable activates the module.  This is the second method called by
+        /// KSP after Awake.  All parts should be added to the vessel now, so it is safe to walk the
+        /// parts tree to find the attached kOSProcessor modules.
+        /// </summary>
+        public void Start()
+        {
+            eva = parentVessel.GetComponentCached<KerbalEVA>(ref eva);
+
+            eva_tgtRpos = typeof(KerbalEVA).GetField("tgtRpos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            eva_packTgtRPos = typeof(KerbalEVA).GetField("packTgtRPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            eva_tgtFwd = typeof(KerbalEVA).GetField("tgtFwd", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            eva_tgtUp = typeof(KerbalEVA).GetField("tgtUp", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            eva_packLinear = typeof(KerbalEVA).GetField("packLinear", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        }
 
 
         public void FixedUpdate()
         {
-             
+
             if (eva == null || !eva.vessel.isEVA )
             {
                 return;
@@ -95,13 +134,13 @@ namespace EVAMove
 
         void Update()
         {
+
             if (tgtanimation != currentanimation)
             {
                 StopAllAnimations();
                 PlayAnimation(tgtanimation);
             }
-
-
+            CheckKeys();
         }
 
 
@@ -113,6 +152,54 @@ namespace EVAMove
 
 
         #region internal functions
+
+        internal void CheckKeys()
+        {
+            if (!parentVessel.isEVA || parentVessel.id != FlightGlobals.ActiveVessel.id ) { return;  }
+
+
+            if (Input.GetKeyDown(KeyCode.Alpha1)) {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom01);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom02);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom03);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom04);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom05);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom06);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom07);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom08);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom09);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom10);
+            }
+        }
+
+
         internal void TryRecoverFromRagdoll()
         {
             Debug.Log("KOSEVA: Trying to recover kerbal.");

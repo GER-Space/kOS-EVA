@@ -38,7 +38,7 @@ namespace kOS.AddOns.kOSEVA
             AddSuffix("MOVE", new OneArgsSuffix<StringValue>(MoveKerbal, "make the kerbal move"));
             AddSuffix("BOARDPART", new OneArgsSuffix<Suffixed.Part.PartValue>(BoardPart, "Enters the Part"));
             AddSuffix("BOARD", new NoArgsVoidSuffix(DoBoard, "Boad a Nearby Vessel or Part"));
-            AddSuffix("PLANTFLAG", new NoArgsVoidSuffix(DoPlantFlag, "Plants a Flag"));
+            AddSuffix("PLANTFLAG", new TwoArgsSuffix<StringValue, StringValue>(DoPlantFlag, "Plants a Flag"));
             AddSuffix("RUNACTION", new OneArgsSuffix<StringValue>(DoRunEvent, "Runs a Event by its name"));
             AddSuffix("ACTIONLIST", new NoArgsSuffix<ListValue>(ListEvents, "List of all event names"));
             AddSuffix("ANIMATIONLIST", new NoArgsSuffix<ListValue>(ListAnimations, "List of all animation names"));
@@ -256,7 +256,24 @@ namespace kOS.AddOns.kOSEVA
             FlightEVA.SpawnEVA(kerbal);
         }
 
-        public void DoPlantFlag()
+        public void DoPlantFlag(StringValue flagname, StringValue flagtext)
+        {
+            CheckEvaController();
+            if (!shared.Vessel.isEVA || !kerbaleva.part.GroundContact)
+            {
+                return;
+            }
+            PlayAnimation(new StringValue("idle"));
+            StopAnimation(new StringValue("idle"));
+            PlayAnimation(new StringValue("flag_plant"));
+            var flag = FlagSite.CreateFlag( (shared.Vessel.GetWorldPos3D() + shared.Vessel.transform.forward * 0.26f - shared.Vessel.transform.up * 0.20f) , shared.Vessel.transform.rotation, kerbaleva.part );
+            flag.placedBy = kerbaleva.vessel.vesselName;
+            flag.PlaqueText = flagtext.ToString();
+            flag.vessel.vesselName = flagname;
+        }
+
+        /*
+        public void DoPlantFlagOld()
         {
             if (!shared.Vessel.isEVA)
             {
@@ -271,6 +288,7 @@ namespace kOS.AddOns.kOSEVA
                 catch { }
             }
         }
+        */
 
         private ListValue ListAnimations ()
         {
@@ -322,13 +340,6 @@ namespace kOS.AddOns.kOSEVA
                 Debug.LogWarning("kOSEVA: Start init EvaController");
                 this.kerbaleva = shared.Vessel.GetComponentCached<KerbalEVA>(ref kerbaleva);
                 evacontrol = evacontrol = shared.Vessel.GetComponentCached<EvaController>(ref evacontrol);
-                evacontrol.eva = kerbaleva;
-
-                evacontrol.eva_tgtRpos = typeof(KerbalEVA).GetField("tgtRpos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                evacontrol.eva_packTgtRPos = typeof(KerbalEVA).GetField("packTgtRPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                evacontrol.eva_tgtFwd = typeof(KerbalEVA).GetField("tgtFwd", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                evacontrol.eva_tgtUp = typeof(KerbalEVA).GetField("tgtUp", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                evacontrol.eva_packLinear = typeof(KerbalEVA).GetField("packLinear", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
                 Debug.LogWarning("kOSEVA: Stop init EvaController");
             }

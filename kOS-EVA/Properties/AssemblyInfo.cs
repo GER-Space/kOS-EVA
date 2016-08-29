@@ -33,5 +33,5 @@ using System.Runtime.InteropServices;
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
-[assembly: KSPAssemblyDependency("kOS", 0, 20)]
+[assembly: AssemblyFileVersion("0.1.0.1")]
+[assembly: KSPAssemblyDependency("kOS", 1, 0)]

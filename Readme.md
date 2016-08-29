@@ -100,9 +100,9 @@ Enters the Part
 Board a nearby vessel or part. The normal KSP rules of boarding apply.
 
 
-**:PLANTFLAG** 
+**:PLANTFLAG(\<FlageSiteName\>,\<Plaque Text as a string\>)** 
 
-Plants a Flag. This requires in the moment a confirmation with the mouse.
+Plants a Flag. The flag site will be named \<FlageSiteName\> and has the plaque field set.
 
 
 **:ACTIONLIST** 
@@ -146,14 +146,18 @@ Stops the Animation named \<name\>.
 Stops all Animations and returns the kerbal to his idle state.
 
 
+## Changelog
+### 0.91 
+* enabled Actiongroups 
+* changed :plantflag() to :plantflag("sitename","Plaque Text").
 
+### 0.9
+* Initial Release
 
 ## future Plans
 
 * better/real RCS movement in space. 
-* automatic planting of a flag
 * KIS support
-* reenable actionsgroups
 * better animation changes.
 * Kerbal brain implants (making this addon work without KIS)
 
@@ -164,6 +168,4 @@ Stops all Animations and returns the kerbal to his idle state.
 * automatic boot does not work with RemoteTech enabled. (no easy workaround in the queue)
 * limited control in Space with RCS thrusters.
 * the animations are not smoothed out, when there is a change in animations.
-* the default actionsgroups keys are not implemented and worse: they are overridden by the default KIS configuration.
-* planting a flag requires a confirmation. 
 
