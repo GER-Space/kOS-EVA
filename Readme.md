@@ -6,15 +6,18 @@ This is a collection of KSP&kOS addons which provide the ability of EVAed Kerbal
 ## Requirements
 
 * kOS
-* KIS
+* (KIS) only for the kOS-Pad
 
 ## How to install
 
 Unpack the .zip file in the GameData folder
 
 ## How to Use
-add the kOS-Pad as a KIS part to the seat-place of the kerbals you want to control. When they go EVA they automatic equip the pad.
-The Pad tries to boot the file "/boot/eva". 
+If you use the Kerbal-Brain-Implant (KBI): Go EVA with a Kerbal.
+
+Or the kOS-Pad as a KIS part to the seat-place of the kerbals you want to control. When they go EVA they automatic equip the pad.
+
+All Kerbals boot the file "/boot/eva". You should add some communication with the ship, to differentiate the kerbal tasks.
 
 ## kOS Addon Functions:
  
@@ -147,6 +150,12 @@ Stops all Animations and returns the kerbal to his idle state.
 
 
 ## Changelog
+### 0.93
+* Kerbal Brain Implants now working. Every Kerbal is now a walking kOS Computer. 
+
+### 0.92
+* Bugfix: newly spawned kerbals are now controllable again.
+
 ### 0.91 
 * enabled Actiongroups 
 * changed :plantflag() to :plantflag("sitename","Plaque Text").
@@ -156,16 +165,17 @@ Stops all Animations and returns the kerbal to his idle state.
 
 ## future Plans
 
+* integrate Brain Implants into Techtree.
 * better/real RCS movement in space. 
 * KIS support
 * better animation changes.
-* Kerbal brain implants (making this addon work without KIS)
+* add a second Parameter to :GOEVA to define a bootfile for newly EVAed Kerbals.
 
 
 
 ## Known Bugs and limitations
 
-* automatic boot does not work with RemoteTech enabled. (no easy workaround in the queue)
+* automatic boot does not always work with RemoteTech, when the Pad is used.
 * limited control in Space with RCS thrusters.
 * the animations are not smoothed out, when there is a change in animations.
 
