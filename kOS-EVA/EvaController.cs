@@ -55,16 +55,8 @@ namespace EVAMove
             parentVessel = GetComponent<Vessel>();
             if (parentVessel != null)
             {
-                if (parentVessel.isEVA && ! parentVessel.name.StartsWith("flag") )
-                {
                     instance = this;
                     Debug.LogWarning("EvaController Awake() finished on " + parentVessel.vesselName);
-                }
-                else
-                {
-                    Debug.LogWarning("EvaController destroyed on " + parentVessel.vesselName + " not EVA" );
-                    Destroy(this);
-                }
             } else
             {
                 Debug.LogWarning("EvaController destroyed: No Vessel");
@@ -80,6 +72,12 @@ namespace EVAMove
         {
             eva = parentVessel.GetComponentCached<KerbalEVA>(ref eva);
 
+            if (eva == null)
+            {
+                Debug.LogWarning("EvaController destroyed on: " + parentVessel.vesselName + ": not EVA");
+                Destroy(this);
+            }
+
             eva_tgtRpos = typeof(KerbalEVA).GetField("tgtRpos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             eva_packTgtRPos = typeof(KerbalEVA).GetField("packTgtRPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             eva_tgtFwd = typeof(KerbalEVA).GetField("tgtFwd", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -94,7 +92,9 @@ namespace EVAMove
 
             if (eva == null || !eva.vessel.isEVA )
             {
-                return;
+                   Debug.LogWarning("EvaController destroyed on: " + parentVessel.vesselName + ": not EVA" );
+                   Destroy(this);
+
             }
             // priority: 0. Ragdoll recover 1. onladder 2. in water 3. on land 4. flying around
             if (eva.isRagdoll)
