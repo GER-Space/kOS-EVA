@@ -47,8 +47,7 @@ namespace EVAMove
 
         /// <summary>
         /// OnAwake is called once when instatiating a new VesselModule.  This is the first method called
-        /// by KSP after the VesselModule has been attached to the parent Vessel.  We use it to store
-        /// the parent Vessel and track the kOSVesselModule instances.
+        /// by KSP after the VesselModule has been attached to the parent Vessel. 
         /// </summary>
         public override void OnAwake()
         {
@@ -56,7 +55,7 @@ namespace EVAMove
             parentVessel = GetComponent<Vessel>();
             if (parentVessel != null)
             {
-                if (parentVessel.isEVA)
+                if (parentVessel.isEVA && ! parentVessel.name.StartsWith("flag") )
                 {
                     instance = this;
                     Debug.LogWarning("EvaController Awake() finished on " + parentVessel.vesselName);
@@ -75,8 +74,7 @@ namespace EVAMove
 
         /// <summary>
         /// Start is called after OnEnable activates the module.  This is the second method called by
-        /// KSP after Awake.  All parts should be added to the vessel now, so it is safe to walk the
-        /// parts tree to find the attached kOSProcessor modules.
+        /// KSP after Awake.  All parts should be added to the vessel now.
         /// </summary>
         public void Start()
         {
