@@ -17,33 +17,33 @@ namespace KerbalBot
 
         public void Awake ()
         {
-
-            // Check for techtree here
-
-            KerbalEVAUtility.AddPartModule("kOSProcessor");
-
-            // check for Remotetech
-            if (IsModInstalled("RemoteTech") ) {
-                Debug.Log("KerbalBot: Enable Remotetech modules");
-                KerbalEVAUtility.AddPartModule("ModuleRTAntennaPassive");
-                KerbalEVAUtility.AddPartModule("ModuleRTDataTransmitter");
-                KerbalEVAUtility.AddPartModule("ModuleSPUPassive");
-
-            } else {
-                Debug.Log("KerbalBot: Enable std antenna modules");
-                KerbalEVAUtility.AddPartModule("ModuleDataTransmitter");
-            }
             GameEvents.onCrewOnEva.Add(this.OnEvaStart);
             GameEvents.onCrewBoardVessel.Add(this.OnEvaEnd);
-            AddEc("kerbalEVA");
-            AddEc("kerbalEVAfemale");
         }
 
+        public void OnDestroy()
+        {
+            GameEvents.onCrewOnEva.Remove(this.OnEvaStart);
+            GameEvents.onCrewBoardVessel.Remove(this.OnEvaEnd);
+        }
 
         public void OnEvaStart(GameEvents.FromToAction<Part, Part> vessel)
         {
+            KerbalEVA eva = null;
+            vessel.to.GetComponentCached<KerbalEVA>(ref eva);
+
+            var crew = eva.vessel.GetVesselCrew().FirstOrDefault();
+            // check for trait here
+            //if (crew.trait != "") { return; }
+
+            Part evapart = eva.part;
+            AddEc(evapart);
+
+            // EC removed from origin vessel and added to new kerbaleva
+
+            evapart.AddModule("kOSProcessor");
+
             Debug.Log("KerbalBot: settings, kOS modules");
-            //vessel.to.RequestResource("ElectricCharge", -maxec);
             kOS.Module.kOSProcessor myproc = null;
             vessel.to.GetComponentCached<kOS.Module.kOSProcessor>(ref myproc);
             myproc.bootFile = "/boot/eva";
@@ -55,6 +55,10 @@ namespace KerbalBot
             if (IsModInstalled("RemoteTech"))
             {
                 Debug.Log("KerbalBot: settings, Remotetech modules");
+                evapart.AddModule("ModuleRTAntennaPassive");
+                evapart.AddModule("ModuleRTDataTransmitter");
+                evapart.AddModule("ModuleSPUPassive");
+
                 RemoteTech.Modules.ModuleRTAntennaPassive antennapassive = null;
                 vessel.to.GetComponentCached<RemoteTech.Modules.ModuleRTAntennaPassive>(ref antennapassive);
                 antennapassive.OmniRange = (float)2000;
@@ -69,6 +73,7 @@ namespace KerbalBot
                 datatrans.PacketResourceCost = (float)0.0f;
 
             } else {
+                evapart.AddModule("ModuleDataTransmitter");
                 Debug.Log("KerbalBot: settings, std modules");
                 ModuleDataTransmitter mytrans = null;
                 vessel.to.parent.GetComponentCached<ModuleDataTransmitter>(ref mytrans);
@@ -82,16 +87,17 @@ namespace KerbalBot
         public void OnEvaEnd(GameEvents.FromToAction<Part, Part> vessel)
         {
      //     
-     //      maybe recovering of unused EC.
+     //       recovering of unused EC.
      //     
         }
 
 
-        internal void AddEc(string kerbal)
+
+        internal void AddEc(Part topart)
         {
             Debug.Log("KerbalBot: adding EC");
-            Part part = PartLoader.getPartInfoByName(kerbal).partPrefab;
-            PartResource resource = part.gameObject.AddComponent<PartResource>();
+
+            PartResource resource = topart.gameObject.AddComponent<PartResource>();
             resource.SetInfo(PartResourceLibrary.Instance.resourceDefinitions["ElectricCharge"]);
             resource.maxAmount = maxec;
             resource.amount = maxec;
