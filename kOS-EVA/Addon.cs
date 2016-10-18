@@ -56,11 +56,7 @@ namespace kOS.AddOns.kOSEVA
                 shared.KSPPart.GetComponentCached<Module.kOSProcessor>(ref myproc);
                 myproc.bootFile = "/boot/eva";
             }
-            if (shared.Vessel.isEVA)
-            {
-             //   Debug.Log("EVA Initialisierung abgeschlossen0");
-                this.kerbaleva = shared.Vessel.GetComponentCached<KerbalEVA>(ref kerbaleva);
-            }
+
 #if DEBUG 
             AddSuffix("LS", new NoArgsSuffix<ListValue>(listfields, ""));
             AddSuffix("LSF", new NoArgsSuffix<ListValue>(listfunctions, ""));
@@ -126,6 +122,7 @@ namespace kOS.AddOns.kOSEVA
 #endif
         private void ToggleRCS(BooleanValue state)
         {
+            CheckEvaController();
             if (state.Value != rcs_state)
             {
                 try
@@ -139,10 +136,13 @@ namespace kOS.AddOns.kOSEVA
 
         private void DoEvent(Suffixed.Part.PartValue part , StringValue eventname)
         {
+            CheckEvaController();
             var mypart = part.Part;
-            PartModule partmodule = null;
-            if   (Vector3d.Magnitude(mypart.transform.position - kerbaleva.transform.position) < 1.5)
+            PartModule mypartmodule = null;
+            Debug.LogWarning("kOS-EVA: [DOEVENT] part: "+ mypart.name + "dst: " + Math.Round((mypart.transform.position - kerbaleva.vessel.rootPart.transform.position).magnitude,2));
+            if   (Vector3d.Magnitude(mypart.transform.position - kerbaleva.vessel.rootPart.transform.position) < 2.5)
             {
+                Debug.LogWarning("kOS-EVA: [DOEVENT] distance ok:" );
                 PartModule[] allpartmodules = mypart.GetComponents<PartModule>();
                 foreach (var pm in allpartmodules)
                 {
@@ -151,16 +151,16 @@ namespace kOS.AddOns.kOSEVA
                         continue;
                     }
                     Debug.Log("kOS-EVA: [DOEVENT] Partmodule found:" + pm.moduleName);
-                    partmodule = pm;
+                    mypartmodule = pm;
 
                 }
 
-                if (partmodule == null)
+                if (mypartmodule == null)
                 {
                     Debug.LogWarning("kOS-EVA: [DOEVENT] Partmodule not found ");
                     return;
                 }
-                BaseEvent my_event = partmodule.Events.Where(x => x.GUIName.ToLower().StartsWith(eventname.ToLower()) ).FirstOrDefault();
+                BaseEvent my_event = mypartmodule.Events.Where(x => x.GUIName.ToLower().StartsWith(eventname.ToLower()) ).FirstOrDefault();
                 if (my_event == null)
                 {
                     Debug.LogWarning("kOS-EVA: [DOEVENT] Event not found ");
@@ -173,19 +173,21 @@ namespace kOS.AddOns.kOSEVA
                 }
             } else
             {
-                Debug.LogWarning("kOS-EVA: [DOEVENT] Part Out of Range: " + Math.Round(Vector3d.Magnitude(mypart.transform.position - kerbaleva.transform.position),2) + " > 1.5");
+                Debug.LogWarning("kOS-EVA: [DOEVENT] Part Out of Range: " + Math.Round(Vector3d.Magnitude(mypart.transform.position - shared.Vessel.rootPart.transform.position),2) + " > 2.5");
             }
         }
 
 
         private void BoardPart(Suffixed.Part.PartValue toboard)
         {
+            CheckEvaController();
             kerbaleva.BoardPart(toboard.Part);
 
         }
 
         private void DoBoard()
         {
+            CheckEvaController();
             try
             {
                     KerbalEVAUtility.RunEvent(kerbaleva, "Boarding Part");
@@ -196,6 +198,7 @@ namespace kOS.AddOns.kOSEVA
 
         private void LadderGrab()
         {
+            CheckEvaController();
             try
             {
                 KerbalEVAUtility.RunEvent(kerbaleva, "Ladder Grab Start");
@@ -205,6 +208,7 @@ namespace kOS.AddOns.kOSEVA
         }
         private void LadderRelease()
         {
+            CheckEvaController();
             try { 
                 KerbalEVAUtility.RunEvent(kerbaleva, "Ladder Let Go");
             }
@@ -215,6 +219,7 @@ namespace kOS.AddOns.kOSEVA
 
         private void DoRunEvent(StringValue eventname)
         {
+            CheckEvaController();
             try
             {
                 KerbalEVAUtility.RunEvent(kerbaleva, eventname.ToString());
@@ -225,6 +230,7 @@ namespace kOS.AddOns.kOSEVA
 
         private ListValue ListEvents()
         {
+            CheckEvaController();
             ListValue events = new ListValue();
             foreach (var evaevent in KerbalEVAUtility.GetEVAEvents(kerbaleva, KerbalEVAUtility.GetEVAStates(kerbaleva) ))
             {
@@ -292,6 +298,7 @@ namespace kOS.AddOns.kOSEVA
 
         private ListValue ListAnimations ()
         {
+            CheckEvaController();
             ListValue animations = new ListValue();
             foreach (AnimationState state in kerbaleva.GetComponent<Animation>() )
             {
@@ -335,11 +342,12 @@ namespace kOS.AddOns.kOSEVA
 
         private void CheckEvaController()
         {
+            if (shared.Vessel.isEVA == false ) { return; } 
             if (evacontrol == null)
             {
                 Debug.LogWarning("kOSEVA: Start init EvaController");
                 this.kerbaleva = shared.Vessel.GetComponentCached<KerbalEVA>(ref kerbaleva);
-                evacontrol = evacontrol = shared.Vessel.GetComponentCached<EvaController>(ref evacontrol);
+                evacontrol = shared.Vessel.GetComponentCached<EvaController>(ref evacontrol);
 
                 Debug.LogWarning("kOSEVA: Stop init EvaController");
             }

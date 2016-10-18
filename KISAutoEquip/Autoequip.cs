@@ -31,7 +31,7 @@ namespace KISAutoEquipt
 
             var kerbal = arg;
 
-            //            if (kerbal.isEVA && IsModInstalled("KIS")) // should be true, better safe though
+            //  if (kerbal.isEVA && IsModInstalled("KIS")) // should be true, better safe
             if (!IsModInstalled("KIS")) { Debug.LogWarning("KIS not loaded"); return; }
             if (kerbal.isEVA)
             {

@@ -22,7 +22,7 @@ namespace EVAMove
         LookAt,
         Stop
     }
-    public class EvaController : VesselModule
+    public class EvaController : PartModule
     {
 
         public static EvaController instance = null;
@@ -31,7 +31,7 @@ namespace EVAMove
 
         public Command order = Command.Stop;
         public KerbalEVA eva = null;
-        public Vector3d lookdirection = Vector.Zero;
+        public Vector3d lookdirection = Vector3d.zero;
         public float rotationdeg;
         internal string currentanimation = null;
         internal string tgtanimation = null;
@@ -41,41 +41,20 @@ namespace EVAMove
         public FieldInfo eva_packTgtRPos = null;
         public FieldInfo eva_packLinear = null;
         internal bool once = true;
-        internal Vessel parentVessel = null;
         internal float lastkeypressed = 0.0f;
+        internal bool initialized = false;
 
+        #region public function
 
-        /// <summary>
-        /// OnAwake is called once when instatiating a new VesselModule.  This is the first method called
-        /// by KSP after the VesselModule has been attached to the parent Vessel. 
-        /// </summary>
-        public override void OnAwake()
+        public void Initialize()
         {
-            Debug.LogWarning("EvaController Awake()!");
-            parentVessel = GetComponent<Vessel>();
-            if (parentVessel != null)
+            Debug.LogWarning("EvaController Initialize: " + vessel.vesselName);
+            eva = vessel.GetComponent<KerbalEVA>();
+            if (eva == null || !eva.vessel.isEVA)
             {
-                    instance = this;
-                    Debug.LogWarning("EvaController Awake() finished on " + parentVessel.vesselName);
-            } else
-            {
-                Debug.LogWarning("EvaController destroyed: No Vessel");
+                Debug.LogWarning("EvaController destroyed on Initialize(): " + vessel.vesselName + ": not EVA");
                 Destroy(this);
-            }
-        }
 
-        /// <summary>
-        /// Start is called after OnEnable activates the module.  This is the second method called by
-        /// KSP after Awake.  All parts should be added to the vessel now.
-        /// </summary>
-        public void Start()
-        {
-            eva = parentVessel.GetComponentCached<KerbalEVA>(ref eva);
-
-            if (eva == null)
-            {
-                Debug.LogWarning("EvaController destroyed on: " + parentVessel.vesselName + ": not EVA");
-                Destroy(this);
             }
 
             eva_tgtRpos = typeof(KerbalEVA).GetField("tgtRpos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -83,25 +62,39 @@ namespace EVAMove
             eva_tgtFwd = typeof(KerbalEVA).GetField("tgtFwd", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             eva_tgtUp = typeof(KerbalEVA).GetField("tgtUp", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             eva_packLinear = typeof(KerbalEVA).GetField("packLinear", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
+            initialized = true;
         }
+   //     public override VesselModule.Activation GetActivation()
+   //     {
+   //         return Activation.FlightScene;
+  //      }
 
 
         public void FixedUpdate()
         {
+            if (initialized == false) { Initialize(); }
+
 
             if (eva == null || !eva.vessel.isEVA )
             {
-                   Debug.LogWarning("EvaController destroyed on: " + parentVessel.vesselName + ": not EVA" );
+                   Debug.LogWarning("EvaController destroyed on FixexdUpdate: " + vessel.vesselName + ": not EVA" );
                    Destroy(this);
 
             }
             // priority: 0. Ragdoll recover 1. onladder 2. in water 3. on land 4. flying around
-            if (eva.isRagdoll)
+            try
             {
-                TryRecoverFromRagdoll();
-                return;
-            }
+                if (eva.fsm.CurrentState.name == "Ragdoll")
+                {
+                    TryRecoverFromRagdoll();
+                    return;
+                }
+
+                if (eva.fsm.CurrentState.name == "Recover")
+                {
+                    return;
+                }
+            } catch { }
 
             if (eva.OnALadder)
             {
@@ -132,7 +125,7 @@ namespace EVAMove
 
         void Update()
         {
-
+            if (initialized == false) { Initialize(); }
             if (tgtanimation != currentanimation)
             {
                 StopAllAnimations();
@@ -147,53 +140,53 @@ namespace EVAMove
             instance = null;
         }
 
-
+        #endregion
 
         #region internal functions
 
         internal void CheckKeys()
         {
-            if (!parentVessel.isEVA || parentVessel.id != FlightGlobals.ActiveVessel.id ) { return;  }
+            if (!vessel.isEVA || vessel.id != FlightGlobals.ActiveVessel.id ) { return;  }
 
 
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom01);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom01);
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom02);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom02);
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom03);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom03);
             }
             if (Input.GetKeyDown(KeyCode.Alpha4))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom04);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom04);
             }
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom05);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom05);
             }
             if (Input.GetKeyDown(KeyCode.Alpha6))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom06);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom06);
             }
             if (Input.GetKeyDown(KeyCode.Alpha7))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom07);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom07);
             }
             if (Input.GetKeyDown(KeyCode.Alpha8))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom08);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom08);
             }
             if (Input.GetKeyDown(KeyCode.Alpha9))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom09);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom09);
             }
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                parentVessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom10);
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Custom10);
             }
         }
 
