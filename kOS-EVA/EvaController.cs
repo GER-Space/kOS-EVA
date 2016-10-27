@@ -46,6 +46,20 @@ namespace EVAMove
 
         #region public function
 
+        //	OnStart (StartState state)
+   /*     public override void OnStart(StartState state)
+        {
+            // check for KerbalBot and trait here and remove kOS Module not allowed.
+            if (ResearchAndDevelopment.GetTechnologyState("miniaturization") == RDTech.State.Unavailable)
+            {
+                Debug.LogWarning("EvaController Initialize(): " + vessel.name + " removing modules");
+                this.part.RemoveModule(this.part.GetComponent<kOS.Module.kOSProcessor>());
+            //    Destroy(this);
+                //this.part.RemoveModule(this.part.GetComponent<EvaController>());
+            }
+        }
+        */
+
         public void Initialize()
         {
             Debug.LogWarning("EvaController Initialize: " + vessel.vesselName);
@@ -54,8 +68,9 @@ namespace EVAMove
             {
                 Debug.LogWarning("EvaController destroyed on Initialize(): " + vessel.vesselName + ": not EVA");
                 Destroy(this);
-
             }
+
+
 
             eva_tgtRpos = typeof(KerbalEVA).GetField("tgtRpos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             eva_packTgtRPos = typeof(KerbalEVA).GetField("packTgtRPos", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -64,10 +79,7 @@ namespace EVAMove
             eva_packLinear = typeof(KerbalEVA).GetField("packLinear", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             initialized = true;
         }
-   //     public override VesselModule.Activation GetActivation()
-   //     {
-   //         return Activation.FlightScene;
-  //      }
+
 
 
         public void FixedUpdate()
@@ -143,6 +155,8 @@ namespace EVAMove
         #endregion
 
         #region internal functions
+
+
 
         internal void CheckKeys()
         {
