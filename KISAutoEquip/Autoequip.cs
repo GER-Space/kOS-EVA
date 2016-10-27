@@ -12,46 +12,48 @@ namespace KISAutoEquipt
     {
         void Start()
         {
-          // not working in that State
-          //  GameEvents.onCrewOnEva.Add(EquipPart);
-            GameEvents.onVesselChange.Add(EquipPart);
+            // not working in that State
+            //  GameEvents.onCrewOnEva.Add(EquipPart);
+            if (IsModInstalled("KIS"))
+            {
+                GameEvents.onVesselChange.Add(EquipPart);
+            }
         }
         void OnDestroy()
         {
             // not working in that State
             // GameEvents.onCrewOnEva.Remove(EquipPart);
-            GameEvents.onVesselChange.Remove(EquipPart);
+            if (IsModInstalled("KIS"))
+            {
+                GameEvents.onVesselChange.Remove(EquipPart);
+            }
         }
 
-        public void EquipPart(Vessel arg)
+
+        /// <summary>
+        /// Scans the local KIS inventory of a kerbal and attaches the needed part.
+        /// </summary>
+        /// <param name="kerbal"></param>
+        public void EquipPart(Vessel kerbal)
         {
-            // for onCrewOnEva
-            // arg.from = ship kerbal is getting out of
-            // arg.to = ship being switched to (the eva kerbal)
-
-            var kerbal = arg;
-
-            //  if (kerbal.isEVA && IsModInstalled("KIS")) // should be true, better safe
-            if (!IsModInstalled("KIS")) { Debug.LogWarning("KIS not loaded"); return; }
+            if (!IsModInstalled("KIS")) { Debug.Log("KIS not loaded"); return; }
             if (kerbal.isEVA)
             {
                 var kis = FlightGlobals.ActiveVessel.rootPart.FindModuleImplementing<ModuleKISInventory>();
                 if (kis != null)
+                {
+                    var neededItem = kis.items.FirstOrDefault(x => x.Value.availablePart.name == "kOSPad3").Value;
+                    if (neededItem != null && !neededItem.equipped)
                     {
-                        var neededItem = kis.items.FirstOrDefault(x => x.Value.availablePart.name == "kOSPad3").Value;
-                        if (neededItem != null && !neededItem.equipped)
-                        {
-                            neededItem.Equip();
-                        }
-                        else
-                        {
-                            Debug.LogWarning("No needed item");
-                        }
-                    } else { Debug.LogWarning("No KIS found"); }
+                        neededItem.Equip();
+                    }
+                    else
+                    {
+                        Debug.Log("No needed item");
+                    }
                 }
-
-       //     if (kerbal.FindPartModulesImplementing<YourPartModule>().Count == 0)
-       //            kerbal.rootPart.AddModule("YourPartModule");
+                else { Debug.LogWarning("No KIS found"); }
+            }
         }
 
         internal static bool IsModInstalled(string assemblyName)
