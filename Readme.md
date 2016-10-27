@@ -11,6 +11,7 @@ This is a collection of KSP&kOS addons which provide the ability of EVAed Kerbal
 ## How to install
 
 Unpack the kOS-EVA.zip file in the GameData folder
+
 if you want to use the Brain Implants: unzip the kOS-EVA-4all.zip in the GameData folder.
 
 ## How to Use
