@@ -319,15 +319,15 @@ namespace kOS.AddOns.kOSEVA
             Animation _kerbalanimation = null;
             shared.Vessel.GetComponentCached<Animation>(ref _kerbalanimation);
             _kerbalanimation.Stop(name);
-            _kerbalanimation.CrossFade("idle");
+            _kerbalanimation.CrossFade("idle",0.3f,PlayMode.StopSameLayer);
         }
 
         private void StopAllAnimations()
         {
             Animation _kerbalanimation = null;
             shared.Vessel.GetComponentCached<Animation>(ref _kerbalanimation);
-            _kerbalanimation.Stop();
-            _kerbalanimation.CrossFade("idle");
+          //  _kerbalanimation.Stop();
+            _kerbalanimation.CrossFade("idle", 0.3f, PlayMode.StopAll);
         }
 
         private void LoadAnimation (StringValue path)

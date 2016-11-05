@@ -383,7 +383,7 @@ namespace EVAMove
         {
             Animation _kerbalanimation = null;
             eva.vessel.GetComponentCached<Animation>(ref _kerbalanimation);
-            _kerbalanimation.CrossFade(name);
+            _kerbalanimation.CrossFade(name, 0.3f, PlayMode.StopAll);
             currentanimation = name;
         }
 
@@ -391,8 +391,8 @@ namespace EVAMove
         {
             Animation _kerbalanimation = null;
             eva.vessel.GetComponentCached<Animation>(ref _kerbalanimation);
-            _kerbalanimation.Stop();
-            _kerbalanimation.CrossFade("idle");
+           // _kerbalanimation.Stop();
+            _kerbalanimation.CrossFade("idle", 0.3f, PlayMode.StopAll);
 
         }
         #endregion
