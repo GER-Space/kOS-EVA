@@ -10,7 +10,9 @@ This is a collection of KSP&kOS addons which provide the ability of EVAed Kerbal
 
 ## How to install
 
-Unpack the .zip file in the GameData folder
+Unpack the kOS-EVA.zip file in the GameData folder
+
+if you want to use the Brain Implants: unzip the kOS-EVA-4all.zip in the GameData folder.
 
 ## How to Use
 If you use the Kerbal-Brain-Implant (KBI): Go EVA with a Kerbal.
@@ -150,17 +152,21 @@ Stops all Animations and returns the kerbal to his idle state.
 
 
 ## Changelog
-### 0.93
+### 0.1
+* Ported the addon to KSP 1.2.
+* Created ModuleManager .cfg files for the Kerbal Modules
+
+### 0.0.93
 * Kerbal Brain Implants now working. Every Kerbal is now a walking kOS Computer. 
 
-### 0.92
+### 0.0.92
 * Bugfix: newly spawned kerbals are now controllable again.
 
-### 0.91 
+### 0.0.91 
 * enabled Actiongroups 
 * changed :plantflag() to :plantflag("sitename","Plaque Text").
 
-### 0.9
+### 0.0.9
 * Initial Release
 
 ## future Plans
@@ -175,7 +181,7 @@ Stops all Animations and returns the kerbal to his idle state.
 
 ## Known Bugs and limitations
 
-* automatic boot does not always work with RemoteTech, when the Pad is used.
+* automatic boot does not always work with RemoteTech.
 * limited control in Space with RCS thrusters.
 * the animations are not smoothed out, when there is a change in animations.
 
